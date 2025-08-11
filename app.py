@@ -1,245 +1,107 @@
-{
-  "nbformat": 4,
-  "nbformat_minor": 0,
-  "metadata": {
-    "colab": {
-      "provenance": [],
-      "authorship_tag": "ABX9TyNpIwpx1uqIji1Iz9Ez1UTC",
-      "include_colab_link": true
-    },
-    "kernelspec": {
-      "name": "python3",
-      "display_name": "Python 3"
-    },
-    "language_info": {
-      "name": "python"
-    }
-  },
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {
-        "id": "view-in-github",
-        "colab_type": "text"
-      },
-      "source": [
-        "<a href=\"https://colab.research.google.com/github/SamiFAR3OON/app.py/blob/main/app.py\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "import streamlit as st\n",
-        "import csv\n",
-        "import os\n",
-        "from datetime import datetime\n",
-        "\n",
-        "# Person_Info class\n",
-        "class Person_Info:\n",
-        "    def __init__(self, name, age, gender, mail, Date, tall, weight, fitness_goal, activity_level, body_fat_percentage, muscle_percentage, water_percentage):\n",
-        "        self.name = name\n",
-        "        self.age = age\n",
-        "        self.gender = gender\n",
-        "        self.mail = mail\n",
-        "        self.Date = Date\n",
-        "        self.tall = tall\n",
-        "        self.weight = weight\n",
-        "        self.fitness_goal = fitness_goal\n",
-        "        self.activity_level = activity_level\n",
-        "        self.body_fat_percentage = body_fat_percentage\n",
-        "        self.muscle_percentage = muscle_percentage\n",
-        "        self.water_percentage = water_percentage\n",
-        "\n",
-        "    def save_to_csv(self, filename=\"person_data.csv\"):\n",
-        "        file_exists = os.path.isfile(filename)\n",
-        "        with open(filename, mode='a', newline='', encoding='utf-8') as file:\n",
-        "            writer = csv.writer(file)\n",
-        "            if not file_exists:\n",
-        "                writer.writerow([\n",
-        "                    \"Name\", \"Age\", \"Gender\", \"Mail\", \"Date\", \"Tall\", \"Weight\",\n",
-        "                    \"Fitness Goal\", \"Activity Level\", \"Body Fat %\",\n",
-        "                    \"Muscle %\", \"Water %\"\n",
-        "                ])\n",
-        "            writer.writerow([\n",
-        "                self.name, self.age, self.gender, self.mail, self.Date, self.tall, self.weight,\n",
-        "                self.fitness_goal, self.activity_level, self.body_fat_percentage,\n",
-        "                self.muscle_percentage, self.water_percentage\n",
-        "            ])\n",
-        "\n",
-        "# Trainer_Info class\n",
-        "class Trainer_Info:\n",
-        "    def __init__(self, trainer_name, trainer_age, trainer_gender, trainer_mail, specialization, experience_years):\n",
-        "        self.trainer_name = trainer_name\n",
-        "        self.trainer_age = trainer_age\n",
-        "        self.trainer_gender = trainer_gender\n",
-        "        self.trainer_mail = trainer_mail\n",
-        "        self.specialization = specialization\n",
-        "        self.experience_years = experience_years\n",
-        "\n",
-        "    def save_to_csv(self, filename=\"trainer_data.csv\"):\n",
-        "        file_exists = os.path.isfile(filename)\n",
-        "        with open(filename, mode='a', newline='', encoding='utf-8') as file:\n",
-        "            writer = csv.writer(file)\n",
-        "            if not file_exists:\n",
-        "                writer.writerow([\n",
-        "                    \"Name\", \"Age\", \"Gender\", \"Mail\", \"Specialization\", \"Experience Years\"\n",
-        "                ])\n",
-        "            writer.writerow([\n",
-        "                self.trainer_name, self.trainer_age, self.trainer_gender, self.trainer_mail, self.specialization, self.experience_years\n",
-        "            ])\n",
-        "\n",
-        "# Streamlit UI\n",
-        "st.title(\"🏋️‍♂️ Fitness & Trainer Data App\")\n",
-        "\n",
-        "menu = [\"Person Info\", \"Trainer Info\"]\n",
-        "choice = st.sidebar.selectbox(\"Select Option\", menu)\n",
-        "\n",
-        "if choice == \"Person Info\":\n",
-        "    st.header(\"Enter Person Info\")\n",
-        "    name = st.text_input(\"Name\")\n",
-        "    age = st.number_input(\"Age\", min_value=0)\n",
-        "    gender = st.selectbox(\"Gender\", [\"Male\", \"Female\"])\n",
-        "    mail = st.text_input(\"Email\")\n",
-        "    tall = st.number_input(\"Height (cm)\", min_value=0.0)\n",
-        "    weight = st.number_input(\"Weight (kg)\", min_value=0.0)\n",
-        "    fitness_goal = st.text_input(\"Fitness Goal\")\n",
-        "    activity_level = st.text_input(\"Activity Level\")\n",
-        "    body_fat_percentage = st.number_input(\"Body Fat %\", min_value=0.0)\n",
-        "    muscle_percentage = st.number_input(\"Muscle %\", min_value=0.0)\n",
-        "    water_percentage = st.number_input(\"Water %\", min_value=0.0)\n",
-        "\n",
-        "    if st.button(\"Save Person Data\"):\n",
-        "        date_now = datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")\n",
-        "        person = Person_Info(name, age, gender, mail, date_now, tall, weight, fitness_goal, activity_level, body_fat_percentage, muscle_percentage, water_percentage)\n",
-        "        person.save_to_csv()\n",
-        "        st.success(\"✅ Person Data Saved Successfully!\")\n",
-        "\n",
-        "elif choice == \"Trainer Info\":\n",
-        "    st.header(\"Enter Trainer Info\")\n",
-        "    name = st.text_input(\"Trainer Name\")\n",
-        "    age = st.number_input(\"Trainer Age\", min_value=0)\n",
-        "    gender = st.selectbox(\"Trainer Gender\", [\"Male\", \"Female\"])\n",
-        "    mail = st.text_input(\"Trainer Email\")\n",
-        "    specialization = st.text_input(\"Specialization\")\n",
-        "    experience_years = st.number_input(\"Experience Years\", min_value=0)\n",
-        "\n",
-        "    if st.button(\"Save Trainer Data\"):\n",
-        "        trainer = Trainer_Info(name, age, gender, mail, specialization, experience_years)\n",
-        "        trainer.save_to_csv()\n",
-        "        st.success(\"✅ Trainer Data Saved Successfully!\")\n"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "obQiE9b8j3OU",
-        "outputId": "c6e1531e-0749-4bc6-dd97-ecc6a1714b29"
-      },
-      "execution_count": null,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "2025-08-11 10:23:53.854 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.855 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.857 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.859 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.860 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.861 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.863 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.864 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.865 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.867 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.869 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.870 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.871 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.872 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.873 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.874 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.875 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.876 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.877 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.877 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.878 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.879 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.880 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.881 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.881 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.882 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.883 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.883 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.884 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.885 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.886 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.886 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.887 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.888 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.889 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.889 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.890 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.891 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.891 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.892 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.893 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.894 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.894 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.895 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.896 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.896 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.897 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.898 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.898 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.899 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.900 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.900 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.901 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.902 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.902 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.903 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.904 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.904 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.906 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.907 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.908 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.908 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.909 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.910 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.910 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.911 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.912 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.915 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.916 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.916 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.917 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.918 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.918 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.919 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.920 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.921 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.922 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.922 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.923 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.924 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.925 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.925 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.926 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.927 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.927 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.928 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.929 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.929 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.930 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.930 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.931 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.932 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.933 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-08-11 10:23:53.933 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
-          ]
-        }
-      ]
-    }
-  ]
-}
+# -*- coding: utf-8 -*-
+"""app.py
+
+Automatically generated by Colab.
+
+Original file is located at
+    https://colab.research.google.com/drive/1GJiRU0LZmncQZCry0a4tErQCQFera2Du
+"""
+
+import streamlit as st
+import csv
+import os
+from datetime import datetime
+
+# Person_Info class
+class Person_Info:
+    def __init__(self, name, age, gender, mail, Date, tall, weight, fitness_goal, activity_level, body_fat_percentage, muscle_percentage, water_percentage):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.mail = mail
+        self.Date = Date
+        self.tall = tall
+        self.weight = weight
+        self.fitness_goal = fitness_goal
+        self.activity_level = activity_level
+        self.body_fat_percentage = body_fat_percentage
+        self.muscle_percentage = muscle_percentage
+        self.water_percentage = water_percentage
+
+    def save_to_csv(self, filename="person_data.csv"):
+        file_exists = os.path.isfile(filename)
+        with open(filename, mode='a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow([
+                    "Name", "Age", "Gender", "Mail", "Date", "Tall", "Weight",
+                    "Fitness Goal", "Activity Level", "Body Fat %",
+                    "Muscle %", "Water %"
+                ])
+            writer.writerow([
+                self.name, self.age, self.gender, self.mail, self.Date, self.tall, self.weight,
+                self.fitness_goal, self.activity_level, self.body_fat_percentage,
+                self.muscle_percentage, self.water_percentage
+            ])
+
+# Trainer_Info class
+class Trainer_Info:
+    def __init__(self, trainer_name, trainer_age, trainer_gender, trainer_mail, specialization, experience_years):
+        self.trainer_name = trainer_name
+        self.trainer_age = trainer_age
+        self.trainer_gender = trainer_gender
+        self.trainer_mail = trainer_mail
+        self.specialization = specialization
+        self.experience_years = experience_years
+
+    def save_to_csv(self, filename="trainer_data.csv"):
+        file_exists = os.path.isfile(filename)
+        with open(filename, mode='a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow([
+                    "Name", "Age", "Gender", "Mail", "Specialization", "Experience Years"
+                ])
+            writer.writerow([
+                self.trainer_name, self.trainer_age, self.trainer_gender, self.trainer_mail, self.specialization, self.experience_years
+            ])
+
+# Streamlit UI
+st.title("🏋️‍♂️ Fitness & Trainer Data App")
+
+menu = ["Person Info", "Trainer Info"]
+choice = st.sidebar.selectbox("Select Option", menu)
+
+if choice == "Person Info":
+    st.header("Enter Person Info")
+    name = st.text_input("Name")
+    age = st.number_input("Age", min_value=0)
+    gender = st.selectbox("Gender", ["Male", "Female"])
+    mail = st.text_input("Email")
+    tall = st.number_input("Height (cm)", min_value=0.0)
+    weight = st.number_input("Weight (kg)", min_value=0.0)
+    fitness_goal = st.text_input("Fitness Goal")
+    activity_level = st.text_input("Activity Level")
+    body_fat_percentage = st.number_input("Body Fat %", min_value=0.0)
+    muscle_percentage = st.number_input("Muscle %", min_value=0.0)
+    water_percentage = st.number_input("Water %", min_value=0.0)
+
+    if st.button("Save Person Data"):
+        date_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        person = Person_Info(name, age, gender, mail, date_now, tall, weight, fitness_goal, activity_level, body_fat_percentage, muscle_percentage, water_percentage)
+        person.save_to_csv()
+        st.success("✅ Person Data Saved Successfully!")
+
+elif choice == "Trainer Info":
+    st.header("Enter Trainer Info")
+    name = st.text_input("Trainer Name")
+    age = st.number_input("Trainer Age", min_value=0)
+    gender = st.selectbox("Trainer Gender", ["Male", "Female"])
+    mail = st.text_input("Trainer Email")
+    specialization = st.text_input("Specialization")
+    experience_years = st.number_input("Experience Years", min_value=0)
+
+    if st.button("Save Trainer Data"):
+        trainer = Trainer_Info(name, age, gender, mail, specialization, experience_years)
+        trainer.save_to_csv()
+        st.success("✅ Trainer Data Saved Successfully!")
